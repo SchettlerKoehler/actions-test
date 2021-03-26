@@ -11,7 +11,8 @@ jobs:
       PR_NUMBER: ${{github.event.number}}
 
     steps:
-      - id: pr_info
+      - name: Get PR info
+        id: pr_info
         run: |
           content=`curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}`
           # the following lines are only required for multi line json
@@ -20,6 +21,9 @@ jobs:
           content="${content//$'\r'/'%0D'}"
           # end of optional handling for multi line json
           echo "::set-output name=json::$content"
+      - name: Check draft
+        run: |
+          echo "${{fromJson(steps.pr_info.outputs.json).draft}}"
       - run: |
           echo "${{steps.pr_info.outputs.json}}"
 #echo "${{fromJson(steps.set_var.outputs.json).version}}"
