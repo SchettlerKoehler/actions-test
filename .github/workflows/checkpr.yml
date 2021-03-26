@@ -29,6 +29,14 @@ jobs:
           repo-token-user-login: 'github-actions[bot]'
           message: |
             Please mark your pull request as draft until it is finished: https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/changing-the-stage-of-a-pull-request#converting-a-pull-request-to-a-draft
+      - name: Check body
+        if: "${{fromJson(steps.pr_info.outputs.json).body == null}}"
+        uses: mshick/add-pr-comment@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token-user-login: 'github-actions[bot]'
+          message: |
+            Please add a description to your pull request.
    
       - run: |
           echo "${{steps.pr_info.outputs.json}}"
