@@ -48,6 +48,30 @@ jobs:
           repo-token-user-login: 'github-actions[bot]'
           message: |
             Please add a description to your pull request.
+      
+      - name: Get linked issues
+        uses: octokit/graphql-action@v2.x
+        id: linked_issues
+        with:
+          query: |
+            {
+              repository(owner:$owner,name:$repo) {
+                pullRequest(number: $pr) {
+                  projectCards {
+                    nodes {
+                      project {
+                        name
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          owner: ${{ github.event.repository.owner.name }}
+          repo: ${{ github.event.repository.name }}
+          pr: ${{github.event.number}}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
    
       - run: |
           echo "${{steps.pr_info.outputs.json}}"
