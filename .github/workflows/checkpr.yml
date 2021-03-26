@@ -22,7 +22,7 @@ jobs:
           # end of optional handling for multi line json
           echo "::set-output name=json::$content"
       - name: Check draft
-        if: "${{!startsWith(fromJson(steps.pr_info.outputs.json).title,'WIP') || !fromJson(steps.pr_info.outputs.json).draft}}"
+        if: "${{!startsWith(fromJson(steps.pr_info.outputs.json).title,'WIP') && !fromJson(steps.pr_info.outputs.json).draft}}"
         run: |
           echo "Not draft"
       - run: |
