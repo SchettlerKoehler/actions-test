@@ -23,8 +23,13 @@ jobs:
           echo "::set-output name=json::$content"
       - name: Check draft
         if: "${{!startsWith(fromJson(steps.pr_info.outputs.json).title,'WIP') && !fromJson(steps.pr_info.outputs.json).draft}}"
-        run: |
-          echo "Not draft"
+        uses: mshick/add-pr-comment@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token-user-login: 'github-actions[bot]'
+          message: |
+            Please mark your pull request as draft until it is finished: https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/changing-the-stage-of-a-pull-request#converting-a-pull-request-to-a-draft
+   
       - run: |
           echo "${{steps.pr_info.outputs.json}}"
 #echo "${{fromJson(steps.set_var.outputs.json).version}}"
